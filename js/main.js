@@ -44,12 +44,13 @@ function chamarMago() {
 }
 
 // Função para ativar AR (opcional por enquanto)
+/*
 function ativarAR() {
   document.getElementById('jogo').style.display = 'none';
   document.getElementById('ar-view').style.display = 'block';
   console.log("👁️ AR ativado");
 }
-
+*/
 // Função para sair do AR
 function sairAR() {
   document.getElementById('ar-view').style.display = 'none';
