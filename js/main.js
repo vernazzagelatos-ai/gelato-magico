@@ -21,59 +21,55 @@ const enigmas = [
 
 // Inicia o modo AR
 function iniciarAR() {
-  document.getElementById('inicio').style.display = 'none';
+  // Esconde a tela inicial com fade
+  const inicio = document.getElementById('inicio');
+  inicio.style.opacity = '0';
+  setTimeout(() => {
+    inicio.style.display = 'none';
+  }, 500);
+
+  // Mostra a tela AR
   document.getElementById('ar-container').style.display = 'block';
 
-  // Mostra o enigma após o mago aparecer
+  // Garante que a cena AR será iniciada
   setTimeout(() => {
     const enigmaBox = document.getElementById('enigma-box');
     enigmaBox.style.display = 'block';
-    falarEnigma();
-  }, 3000);
+  }, 2000); // Mostra após o carregamento da cena
 }
 
 // Fecha o AR e volta para a tela inicial
 function fecharAR() {
   document.getElementById('ar-container').style.display = 'none';
-  document.getElementById('inicio').style.display = 'flex';
-  document.getElementById('enigma-box').style.display = 'none';
-
-  // Interrompe fala se estiver falando
+  const inicio = document.getElementById('inicio');
+  inicio.style.display = 'flex';
+  inicio.style.opacity = '1';
   window.speechSynthesis.cancel();
 }
 
-// Fala o enigma usando voz sintetizada
+// Fala o enigma ao tocar na caixa
 function falarEnigma() {
-  const texto = "O que é frio como o inverno, doce como o amor e derrete no coração?";
+  const texto = "Grande aprendiz... O que é frio como o inverno, doce como o amor e derrete no coração?";
   const utterance = new SpeechSynthesisUtterance(texto);
-
-  utterance.lang = 'pt-BR';   // Português do Brasil
-  utterance.rate = 0.9;       // Velocidade
-  utterance.pitch = 1.2;      // Tom mais mágico
+  utterance.lang = 'pt-BR';
+  utterance.rate = 0.9;
+  utterance.pitch = 1.2;
   utterance.volume = 1;
-
-  // Evento opcional: destacar caixa ao falar
-  utterance.onstart = () => {
-    const box = document.getElementById('enigma-box');
-    box.style.transform = 'translateX(-50%) scale(1.05)';
-    setTimeout(() => {
-      if (window.speechSynthesis.speaking) {
-        box.style.transform = 'translateX(-50%) scale(1)';
-      }
-    }, 500);
-  };
-
   speechSynthesis.speak(utterance);
+
+  // Feedback visual
+  const box = document.getElementById('enigma-box');
+  box.textContent = "🎧 Enigma sendo falado...";
+  setTimeout(() => {
+    if (!window.speechSynthesis.speaking) {
+      box.textContent = "Toque para ouvir o enigma...";
+    }
+  }, 3000);
 }
 
-// Opcional: tocar som mágico ao iniciar AR
-function tocarEfeitoMagico() {
-  // const audio = new Audio('assets/sounds/magic-spell.mp3');
-  // audio.play().catch(e => console.log("Áudio bloqueado (toque necessário)"));
-}
-
-// Pode-se expandir depois com:
-// - Localização
-// - Enigmas sequenciais
-// - Animações do mago
-// - Salvar progresso
+// Opcional: tocar som mágico ao iniciar (se o usuário já interagiu)
+document.addEventListener('click', function enableAudio() {
+  // Isso libera o áudio no iOS/Android
+  window.speechSynthesis.cancel();
+  document.removeEventListener('click', enableAudio);
+}, { once: true });
