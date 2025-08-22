@@ -14,66 +14,66 @@ const enigmas = [
 
 
 
-// js/main.js
+/**
+ * main.js
+ * Lógica do jogo: AR, enigmas, navegação
+ */
 
-console.log("✅ main.js carregado!");
-
-// Função chamada ao clicar em "Aceitar Missão"
-function iniciarJogo() {
-  console.log("🚀 Missão iniciada!");
+// Inicia o modo AR
+function iniciarAR() {
   document.getElementById('inicio').style.display = 'none';
-  document.getElementById('jogo').style.display = 'block';
-  
-  // Inicia o mapa e mostra o enigma
-  if (typeof iniciarMapa === 'function') {
-    iniciarMapa();
-  }
-  if (typeof mostrarEnigma === 'function') {
-    mostrarEnigma();
-  }
+  document.getElementById('ar-container').style.display = 'block';
+
+  // Mostra o enigma após o mago aparecer
+  setTimeout(() => {
+    const enigmaBox = document.getElementById('enigma-box');
+    enigmaBox.style.display = 'block';
+    falarEnigma();
+  }, 3000);
 }
 
-// Função para chamar o Mago
-function chamarMago() {
-  if (typeof mostrarEnigma === 'function') {
-    mostrarEnigma();
-  }
-  if (typeof falar === 'function') {
-    falar("Sua jornada continua, Aprendiz!");
-  }
+// Fecha o AR e volta para a tela inicial
+function fecharAR() {
+  document.getElementById('ar-container').style.display = 'none';
+  document.getElementById('inicio').style.display = 'flex';
+  document.getElementById('enigma-box').style.display = 'none';
+
+  // Interrompe fala se estiver falando
+  window.speechSynthesis.cancel();
 }
 
-// Função para ativar AR (opcional por enquanto)
-/*
-function ativarAR() {
-  document.getElementById('jogo').style.display = 'none';
-  document.getElementById('ar-view').style.display = 'block';
-  console.log("👁️ AR ativado");
-}
-*/
-// Função para sair do AR
-function sairAR() {
-  document.getElementById('ar-view').style.display = 'none';
-  document.getElementById('jogo').style.display = 'block';
+// Fala o enigma usando voz sintetizada
+function falarEnigma() {
+  const texto = "O que é frio como o inverno, doce como o amor e derrete no coração?";
+  const utterance = new SpeechSynthesisUtterance(texto);
+
+  utterance.lang = 'pt-BR';   // Português do Brasil
+  utterance.rate = 0.9;       // Velocidade
+  utterance.pitch = 1.2;      // Tom mais mágico
+  utterance.volume = 1;
+
+  // Evento opcional: destacar caixa ao falar
+  utterance.onstart = () => {
+    const box = document.getElementById('enigma-box');
+    box.style.transform = 'translateX(-50%) scale(1.05)';
+    setTimeout(() => {
+      if (window.speechSynthesis.speaking) {
+        box.style.transform = 'translateX(-50%) scale(1)';
+      }
+    }, 500);
+  };
+
+  speechSynthesis.speak(utterance);
 }
 
-// Função de enigma (exemplo)
-function mostrarEnigma() {
-  const enigmas = [
-    "Sou de pedra, redonda e antiga. Já vi gladiadores, leões e imperadores. Guardo um leite que nunca esfria. Onde estou?",
-    "Sou cinco terras coloridas, grudadas na montanha, com cheiro de limão e mar. Onde o sol beija as pedras, e o gelato ganha cor?"
-  ];
-  const texto = document.getElementById('texto-enigma');
-  if (texto) {
-    texto.textContent = enigmas[0];
-  }
+// Opcional: tocar som mágico ao iniciar AR
+function tocarEfeitoMagico() {
+  // const audio = new Audio('assets/sounds/magic-spell.mp3');
+  // audio.play().catch(e => console.log("Áudio bloqueado (toque necessário)"));
 }
 
-// Função de voz (opcional)
-function falar(texto) {
-  if ('speechSynthesis' in window) {
-    const utt = new SpeechSynthesisUtterance(texto);
-    utt.lang = 'pt-BR';
-    speechSynthesis.speak(utt);
-  }
-}
+// Pode-se expandir depois com:
+// - Localização
+// - Enigmas sequenciais
+// - Animações do mago
+// - Salvar progresso
