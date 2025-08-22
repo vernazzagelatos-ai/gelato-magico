@@ -1,4 +1,4 @@
-/* Reset básico */
+/* Reset */
 body, html {
   margin: 0;
   padding: 0;
@@ -14,7 +14,7 @@ body, html {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: linear-gradient(to bottom, #1a4d80, #0d1b3d);
+  background: #000; /* Fundo preto */
   color: white;
   text-align: center;
   display: flex;
@@ -22,21 +22,42 @@ body, html {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  transition: opacity 0.5s ease-out;
 }
 
-#inicio .logo {
-  width: 180px;
-  margin-bottom: 20px;
+/* Container circular para o logo */
+.logo-container {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #ff6b9d, #1a4d80);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  margin-bottom: 30px;
+  box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+}
+
+.logo-container .logo {
+  width: 90%;
+  height: 90%;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid white;
 }
 
 #inicio h1 {
   font-size: 2.2em;
   margin: 10px 0;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 107, 157, 0.7);
 }
 
 #inicio p {
   font-size: 1.2em;
-  opacity: 0.9;
+  opacity: 0.8;
+  margin-bottom: 20px;
 }
 
 #inicio button {
@@ -47,13 +68,13 @@ body, html {
   font-size: 1.2em;
   border-radius: 50px;
   cursor: pointer;
-  margin-top: 20px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  transition: background 0.3s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.3s;
 }
 
 #inicio button:hover {
   background: #e55080;
+  transform: scale(1.05);
 }
 
 /* TELA DE AR */
@@ -61,13 +82,18 @@ body, html {
   display: none;
   width: 100%;
   height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
 }
 
+/* Botão Sair */
 #fechar-ar {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: rgba(255, 0, 0, 0.8);
+  background: rgba(255, 0, 0, 0.9);
   color: white;
   border: none;
   padding: 10px 15px;
@@ -75,14 +101,16 @@ body, html {
   z-index: 1100;
   font-size: 1em;
   cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.3);
 }
 
+/* Caixa de enigma */
 #enigma-box {
   position: absolute;
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.8);
   color: white;
   padding: 15px;
   border-radius: 15px;
@@ -91,12 +119,13 @@ body, html {
   text-align: center;
   z-index: 1001;
   display: none;
-  animation: subir 0.8s ease-out;
+  cursor: pointer;
+  animation: fadeIn 0.6s ease-out;
 }
 
-@keyframes subir {
-  from { opacity: 0; bottom: -50px; }
-  to { opacity: 1; bottom: 20px; }
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* A-Frame Scene */
@@ -106,10 +135,5 @@ a-scene {
   position: absolute;
   top: 0;
   left: 0;
-}
-
-/* Botão de saída do AR */
-#ar-view button {
-  font-size: 16px;
-  z-index: 1001;
+  background: #000; /* Fundo preto enquanto carrega */
 }
