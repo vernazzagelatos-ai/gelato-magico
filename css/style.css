@@ -4,6 +4,23 @@
   box-sizing: border-box;
 }
 
+/* Container para o logo */
+.logo-container {
+  text-align: center;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+/* Estiliza o logo */
+.logo-container img {
+  width: 100px;          /* Tamanho pequeno */
+  height: auto;          /* Mantém proporção */
+  border-radius: 50%;    /* Formato arredondado (opcional) */
+  border: 3px solid #d4144d; /* Borda estilosa (opcional) */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+  background: #fff;      /* Fundo branco caso tenha transparência */
+  padding: 5px;          /* Espaço interno */
+}
 body {
   font-family: 'Arial', sans-serif;
   background: #000 url('assets/images/pergaminho-bg.png') no-repeat center center;
