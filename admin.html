@@ -3,26 +3,64 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin - Gelato Mágico</title>
+  <title>🔐 Admin - Gelato Mágico</title>
   <link rel="stylesheet" href="css/style.css" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    .controle {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    input, button {
+      margin: 5px 0;
+      width: 100%;
+    }
+    #raio-display {
+      font-weight: bold;
+      color: #14a8d4;
+    }
+  </style>
 </head>
 <body>
   <div class="admin">
     <h2>🔐 Painel do Mago</h2>
-    <label>
-      Raio do Jogo: 
-      <input type="range" min="100" max="1000" value="500" id="raio-slider" /> 
-      <span id="raio-valor">500m</span>
-    </label>
-    <p>Clique no mapa para definir os 10 pontos turísticos</p>
+
+    <!-- Entrada de Localização -->
+    <div class="controle">
+      <label>📍 Sua Localização Atual</label>
+      <p id="local-atual">Carregando...</p>
+
+      <label>🔍 Ou digite um endereço:</label>
+      <input type="text" id="input-endereco" placeholder="Ex: Praça da Liberdade, SP" />
+      <button onclick="buscarEndereco()">Buscar Endereço</button>
+    </div>
+
+    <!-- Raio do Jogo -->
+    <div class="controle">
+      <label>📏 Raio do Jogo: <span id="raio-display">500m</span></label>
+      <input type="range" min="50" max="1000" value="500" id="raio-slider" oninput="atualizarRaio()" />
+    </div>
+
+    <!-- Mapa -->
     <div id="mapa-admin" class="map"></div>
-    <button onclick="salvarConfig()">Salvar Configuração</button>
-    <button onclick="limparConfig()">Limpar Tudo</button>
-    <div id="status"></div>
+
+    <!-- Status -->
+    <div id="status">🎯 Clique no mapa para definir os 10 pontos turísticos</div>
+
+    <!-- Botões -->
+    <button onclick="salvarConfig()">💾 Salvar Configuração</button>
+    <button onclick="limparConfig()">🗑️ Limpar Tudo</button>
   </div>
 
+  <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Leaflet Geocoder (gratuito) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+  <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+
+  <!-- Script Atualizado -->
   <script src="js/admin.js"></script>
 </body>
 </html>
