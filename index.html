@@ -3,90 +3,171 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Gelato Mágico: A Jornada de Vernazza</title>
-  <meta name="description" content="Encontre o Mago dos Gelatos em Realidade Aumentada!" />
+  <title>Gelato Mágico</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
 
-  <!-- A-Frame + AR.js -->
-  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+    #inicio {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    .logo-container {
+      width: 168px;
+      height: 168px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff6b9d, #1a4d80);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      margin-bottom: 30px;
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+    }
+
+    .logo-container img {
+      width: 90%;
+      height: 90%;
+      border-radius: 50%;
+      border: 5px solid white;
+    }
+
+    button {
+      background: #ff6b9d;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 50px;
+      cursor: pointer;
+    }
+
+    #ar-container {
+      display: none;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+    }
+
+    #fechar-ar {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 0, 0, 0.9);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 1100;
+      font-size: 1em;
+    }
+  </style>
+
+  <!-- A-Frame (última versão) -->
+  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+  <!-- AR.js para rastreamento de plano -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
-  <!-- Estilo -->
-  <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <!-- TELA INICIAL -->
   <div id="inicio">
     <div class="logo-container">
-      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
+      <img src="assets/images/logo-vernazza.png" alt="Vernazza" />
     </div>
     <h1>Gelato Mágico</h1>
     <p>Sua jornada mística começa agora.</p>
     <button onclick="iniciarAR()">✨ Aceitar Missão</button>
   </div>
 
-
-<!-- Dentro do <a-scene> -->
-
-
-  
-  <!-- TELA DE REALIDADE AUMENTADA -->
+  <!-- TELA AR -->
   <div id="ar-container">
-   <a-scene
-  embedded
-  arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; distanceSmoothFactor: 0.1;"
-  vr-mode-ui="enabled: false"
-  renderer="logarithmicDepthBuffer: true;"
-  webgl="antialias: true"
-  <a-entity
-  id="mago-model"
-  gltf-model="assets/3d/mago-dos-gelatos.glb"
-  scale="0.3 0.3 0.3"
-  position="0 0.5 0"
-  rotation="0 180 0"
-  animation-mixer
-></a-entity>
-
-<!-- Elemento de aviso (opcional) -->
-<a-entity
-  id="erro-modelo"
-  visible="false"
-  position="0 1.2 0"
-  text="value: Modelo 3D não disponível; color: #ff0000; align: center; width: 5"
-></a-entity>
->
-      <!-- Luz ambiente e direcional -->
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; canvasWidth: 480; canvasHeight: 640"
+      vr-mode-ui="enabled: false"
+    >
+      <!-- Luz para o modelo não ficar preto -->
       <a-light type="ambient" intensity="1"></a-light>
       <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
 
-      <!-- Plano de rastreamento no chão -->
+      <!-- Plano de rastreamento -->
       <a-entity
         position="0 0 0"
         rotation="-90 0 0"
         plane="size: 1"
       ></a-entity>
 
-      <!-- Modelo 3D do Mago -->
+      <!-- Modelo 3D (opcional - pode falhar sem quebrar) -->
       <a-entity
-        id="mago-3d"
+        id="mago-model"
         gltf-model="assets/3d/mago-dos-gelatos.glb"
         scale="0.3 0.3 0.3"
         position="0 0.5 0"
         rotation="0 180 0"
         animation-mixer
       ></a-entity>
+
+      <!-- Mensagem se modelo falhar -->
+      <a-entity
+        id="erro-modelo"
+        visible="false"
+        position="0 1.2 0"
+        text="value: Mago indisponível; color: yellow; align: center; width: 5"
+      ></a-entity>
     </a-scene>
 
-    <!-- Botão para sair do AR -->
     <button id="fechar-ar" onclick="fecharAR()">✖️ Sair</button>
-
-    <!-- Caixa de enigma -->
-    <div id="enigma-box" onclick="falarEnigma()">
-      Toque para ouvir o enigma...
-    </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="js/main.js"></script>
+  <script>
+    function iniciarAR() {
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('ar-container').style.display = 'block';
+
+      // Força o A-Frame reiniciar
+      setTimeout(() => {
+        window.dispatchEvent(new Event('resize'));
+        document.querySelector('a-scene').play(); // Força iniciar
+      }, 500);
+
+      // Mostra erro se modelo não carregar
+      const model = document.getElementById('mago-model');
+      model.addEventListener('model-error', () => {
+        document.getElementById('erro-modelo').setAttribute('visible', true);
+      });
+    }
+
+    function fecharAR() {
+      const scene = document.querySelector('a-scene');
+      if (scene) scene.pause(); // Pausa o AR
+      document.getElementById('ar-container').style.display = 'none';
+      document.getElementById('inicio').style.display = 'flex';
+    }
+
+    // Libera áudio/vídeo no mobile
+    document.addEventListener('click', () => {
+      // Ativa contexto de mídia
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      ctx.resume().then(() => console.log('Áudio desbloqueado'));
+    }, { once: true });
+  </script>
 </body>
 </html>
