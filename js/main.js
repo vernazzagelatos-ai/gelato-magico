@@ -11,54 +11,62 @@ const enigmas = [
   "Sou uma gruta azul onde o mar canta. Dizem que sereias choram sal que brilha ao luar. Onde estou?",
   "Sou uma fonte onde moedas voam. Quem joga uma, sonha com estrelas. Mas o verdadeiro segredo está na inscrição esquecida: 'Trevi' vem de 'trivium'. O que isso significa?"
 ];
-
-
-
 /**
  * main.js
- * Lógica do jogo: AR, enigmas, navegação
- */
-
-/**
- * main.js
- * Corrigido para ativar câmera após toque
+ * Com tratamento de erro para modelo .glb ausente
  */
 
 let arSceneInitialized = false;
 
 function iniciarAR() {
-  // Mostra a tela AR
   document.getElementById('inicio').style.display = 'none';
   document.getElementById('ar-container').style.display = 'block';
 
-  // Inicializa a cena AR apenas após o toque (necessário para iOS/Android)
   if (!arSceneInitialized) {
-    setTimeout(() => {
-      initARScene();
-    }, 500);
+    setTimeout(initARScene, 500);
     arSceneInitialized = true;
   }
 }
 
 function initARScene() {
-  // Força o A-Frame reiniciar o canvas e ativar a câmera
   const scene = document.querySelector('a-scene');
 
-  // Verifica se o AR já foi iniciado
-  if (scene && !scene.hasLoaded) {
-    scene.addEventListener('loaded', () => {
-      console.log('A-Frame scene carregada');
-      showEnigma();
-    });
+  // Espera o A-Frame carregar
+  if (scene.hasLoaded) {
+    setupModelErrorHandling();
   } else {
-    console.log('A-Frame já carregado');
-    showEnigma();
+    scene.addEventListener('loaded', () => {
+      setupModelErrorHandling();
+      showEnigma(); // Mostra enigma após carregar
+    });
   }
 
-  // Força o redimensionamento da cena
+  // Força resize para ativar câmera
   setTimeout(() => {
     window.dispatchEvent(new Event('resize'));
   }, 1000);
+}
+
+function setupModelErrorHandling() {
+  const modelEntity = document.getElementById('mago-model');
+  const errorText = document.getElementById('erro-modelo');
+
+  // Escuta se o modelo carregou
+  modelEntity.addEventListener('model-loaded', () => {
+    console.log('Modelo 3D carregado com sucesso!');
+    errorText.setAttribute('visible', false);
+  });
+
+  // Escuta erro de carregamento
+  modelEntity.addEventListener('model-error', () => {
+    console.warn('⚠️ Modelo .glb não encontrado ou falhou ao carregar.');
+    
+    // Oculta o modelo (não faz nada, mas garantimos)
+    modelEntity.setAttribute('visible', false);
+    
+    // Mostra mensagem opcional no AR
+    errorText.setAttribute('visible', true);
+  });
 }
 
 function showEnigma() {
@@ -91,12 +99,9 @@ function falarEnigma() {
   }, 3000);
 }
 
-// Libera áudio e vídeo no mobile (iOS/Android)
+// Libera áudio/vídeo no mobile
 document.addEventListener('click', function unlockMedia() {
-  // Isso ativa o contexto de áudio/vídeo no mobile
   const context = new (window.AudioContext || window.webkitAudioContext)();
   context.resume().then(() => console.log('Áudio desbloqueado'));
-
-  // Remove o listener após execução
   document.removeEventListener('click', unlockMedia);
 }, { once: true });
