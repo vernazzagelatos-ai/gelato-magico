@@ -4,109 +4,167 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Gelato Mágico: A Jornada de Vernazza</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="manifest" href="manifest.json" />
-  <link rel="icon" href="assets/images/icon-192.png" />
+  <meta name="description" content="Encontre o Mago dos Gelatos em Realidade Aumentada!" />
 
-  <!-- 8thWall SDK (WebAR) -->
-  <script src="https://cdn.8thwall.com/web/xrweb.glb.min.js"></script>
+  <!-- A-Frame + AR.js (WebAR grátis) -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Arial', sans-serif;
+    }
+
+    #inicio {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: linear-gradient(to bottom, #1a4d80, #0d1b3d);
+      color: white;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .logo {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background: #ff6b9d;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2em;
+      border-radius: 50px;
+      cursor: pointer;
+      margin-top: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+
+    #ar-container {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+
+    #enigma-box {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 15px;
+      border-radius: 15px;
+      max-width: 90%;
+      font-size: 1.1em;
+      text-align: center;
+      z-index: 1001;
+      display: none;
+    }
+
+    #fechar-ar {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(255, 0, 0, 0.8);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 1100;
+      font-size: 1em;
+    }
+  </style>
 </head>
 <body>
 
   <!-- TELA INICIAL -->
-  <div id="inicio" class="tela">
-    <div class="logo-container">
-      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
-    </div>
+  <div id="inicio">
+    <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
     <h1>Gelato Mágico</h1>
     <p>Sua jornada mística começa agora.</p>
-    <button onclick="iniciarJogo()">✨ Aceitar Missão</button>
+    <button onclick="iniciarAR()">✨ Aceitar Missão</button>
   </div>
 
-  <!-- TELA DE AR (será ativada) -->
-  <div id="ar-view" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
-    <div id="xr-scene"></div>
-    <button onclick="fecharAR()" style="position: absolute; top: 10px; right: 10px; z-index: 1100; background: red; color: white; border: none; padding: 10px; border-radius: 5px;">
-      ✖️ Sair
-    </button>
+  <!-- TELA DE REALIDADE AUMENTADA -->
+  <div id="ar-container">
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+      vr-mode-ui="enabled: false"
+    >
+      <!-- Ativa a câmera e rastreia o plano (chão ou mesa) -->
+      <a-entity
+        position="0 0 0"
+        rotation="-90 0 0"
+        plane="size: 1"
+      ></a-entity>
+
+      <!-- Modelo 3D do Mago (.glb) -->
+      <a-entity
+        id="mago-3d"
+        gltf-model="assets/3d/mago-dos-gelatos.glb"
+        scale="0.3 0.3 0.3"
+        position="0 0.5 0"
+        rotation="0 180 0"
+        animation-mixer
+      ></a-entity>
+
+      <!-- Luz ambiente para o modelo não ficar preto -->
+      <a-light type="ambient" intensity="0.7"></a-light>
+      <a-light type="directional" intensity="0.7" position="0 1 1"></a-light>
+    </a-scene>
+
+    <!-- Botão para sair do AR -->
+    <button id="fechar-ar" onclick="fecharAR()">✖️ Sair</button>
+
+    <!-- Caixa de enigma -->
+    <div id="enigma-box">
+      O que é frio como o inverno, doce como o amor e derrete no coração?
+    </div>
   </div>
 
-  <!-- Scripts -->
   <script>
-    // Função chamada ao clicar em "Aceitar Missão"
-    function iniciarJogo() {
+    // Inicia o modo AR
+    function iniciarAR() {
       document.getElementById('inicio').style.display = 'none';
-      document.getElementById('ar-view').style.display = 'block';
+      document.getElementById('ar-container').style.display = 'block';
 
-      // Inicializa a cena AR com 8thWall
-      initAR();
+      // Mostra o enigma após 3 segundos (quando o mago aparecer)
+      setTimeout(() => {
+        document.getElementById('enigma-box').style.display = 'block';
+        falarEnigma();
+      }, 3000);
     }
 
+    // Fecha o AR e volta para a tela inicial
     function fecharAR() {
-      document.getElementById('ar-view').style.display = 'none';
-      document.getElementById('inicio').style.display = 'flex'; // ou 'block'
+      document.getElementById('ar-container').style.display = 'none';
+      document.getElementById('inicio').style.display = 'flex';
+      document.getElementById('enigma-box').style.display = 'none';
     }
 
-    async function initAR() {
-      try {
-        // Configuração da cena AR
-        const scene = new XRWebGLScene(document.getElementById('xr-scene'));
-
-        // Modelo 3D do mago (coloque seu .glb aqui)
-        const modelUrl = 'assets/3d/mago-dos-gelatos.glb'; // Caminho do seu modelo
-
-        // Cria um plano de rastreamento (chão)
-        const plane = new XRPlane({ auto: true });
-
-        // Adiciona o mago 3D
-        const model = new XRGLBModel({
-          url: modelUrl,
-          scale: 0.5, // ajuste o tamanho
-          rotation: { x: 0, y: 180, z: 0 }, // vira para o usuário
-          position: { y: 0, z: 0 },
-          physics: false,
-        });
-
-        // Adiciona à cena quando o plano for detectado
-        plane.on('hit', (hit) => {
-          if (!scene.hasChild(model)) {
-            model.position.copy(hit.position);
-            scene.addChild(model);
-
-            // Fala o enigma após o mago aparecer
-            setTimeout(() => {
-              falarEnigma();
-            }, 1000);
-          }
-        });
-
-        scene.addChild(plane);
-        await scene.start();
-
-      } catch (error) {
-        console.error('Erro ao iniciar AR:', error);
-        alert('Erro ao iniciar a realidade aumentada. Verifique a câmera e tente novamente.');
-      }
-    }
-
-    // Função que faz o mago "falar" o enigma
+    // Faz o enigma ser falado (voz sintetizada)
     function falarEnigma() {
-      const enigma = "Grande aprendiz... Para desbloquear o gelato eterno, responda: O que é frio como o inverno, doce como o amor e derrete no coração?";
-
-      // Usa a Web Speech API para falar
-      const utterance = new SpeechSynthesisUtterance(enigma);
-      utterance.lang = 'pt-BR'; // Voz em português
+      const texto = "O que é frio como o inverno, doce como o amor e derrete no coração?";
+      const utterance = new SpeechSynthesisUtterance(texto);
+      utterance.lang = 'pt-BR';
       utterance.rate = 0.9;
       utterance.pitch = 1.2;
-
       speechSynthesis.speak(utterance);
-
-      // Opcional: mostra o texto na tela
-      alert(enigma);
     }
   </script>
 
-  <!-- Scripts adicionais (opcional) -->
-  <script src="js/speech.js"></script>
 </body>
 </html>
