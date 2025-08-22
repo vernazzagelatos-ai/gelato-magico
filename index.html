@@ -7,37 +7,106 @@
   <link rel="stylesheet" href="css/style.css" />
   <link rel="manifest" href="manifest.json" />
   <link rel="icon" href="assets/images/icon-192.png" />
+
+  <!-- 8thWall SDK (WebAR) -->
+  <script src="https://cdn.8thwall.com/web/xrweb.glb.min.js"></script>
 </head>
 <body>
 
-
- <!-- TELA INICIAL -->
-<div id="inicio" class="tela">
-  <div class="logo-container">
-    <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
-  </div>
-  <h1>Gelato Mágico</h1>
-  <p>Sua jornada mística começa agora.</p>
-  <button onclick="iniciarJogo()">✨ Aceitar Missão</button>
-</div>
-
-  <!-- TELA DO JOGO (mapa e enigmas) -->
-  <div id="jogo" class="tela" style="display: none;">
-    <div id="mapa-container"></div>
-    <div id="enigma-box" class="enigma">
-      <p id="texto-enigma">O Mago irá revelar o primeiro enigma...</p>
+  <!-- TELA INICIAL -->
+  <div id="inicio" class="tela">
+    <div class="logo-container">
+      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
     </div>
-    <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
-    <button id="ativar-ar" onclick="ativarAR()">👁️ Ativar Visão Mística</button>
+    <h1>Gelato Mágico</h1>
+    <p>Sua jornada mística começa agora.</p>
+    <button onclick="iniciarJogo()">✨ Aceitar Missão</button>
   </div>
 
-  <!-- TELA DE AR (será carregada DINAMICAMENTE) -->
-  <div id="ar-view" style="display: none;"></div>
+  <!-- TELA DE AR (será ativada) -->
+  <div id="ar-view" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+    <div id="xr-scene"></div>
+    <button onclick="fecharAR()" style="position: absolute; top: 10px; right: 10px; z-index: 1100; background: red; color: white; border: none; padding: 10px; border-radius: 5px;">
+      ✖️ Sair
+    </button>
+  </div>
 
-  <!-- Scripts iniciais (sem AR.js ainda) -->
-  <script src="js/main.js"></script>
-  <script src="js/geolocation.js"></script>
+  <!-- Scripts -->
+  <script>
+    // Função chamada ao clicar em "Aceitar Missão"
+    function iniciarJogo() {
+      document.getElementById('inicio').style.display = 'none';
+      document.getElementById('ar-view').style.display = 'block';
+
+      // Inicializa a cena AR com 8thWall
+      initAR();
+    }
+
+    function fecharAR() {
+      document.getElementById('ar-view').style.display = 'none';
+      document.getElementById('inicio').style.display = 'flex'; // ou 'block'
+    }
+
+    async function initAR() {
+      try {
+        // Configuração da cena AR
+        const scene = new XRWebGLScene(document.getElementById('xr-scene'));
+
+        // Modelo 3D do mago (coloque seu .glb aqui)
+        const modelUrl = 'assets/3d/mago-dos-gelatos.glb'; // Caminho do seu modelo
+
+        // Cria um plano de rastreamento (chão)
+        const plane = new XRPlane({ auto: true });
+
+        // Adiciona o mago 3D
+        const model = new XRGLBModel({
+          url: modelUrl,
+          scale: 0.5, // ajuste o tamanho
+          rotation: { x: 0, y: 180, z: 0 }, // vira para o usuário
+          position: { y: 0, z: 0 },
+          physics: false,
+        });
+
+        // Adiciona à cena quando o plano for detectado
+        plane.on('hit', (hit) => {
+          if (!scene.hasChild(model)) {
+            model.position.copy(hit.position);
+            scene.addChild(model);
+
+            // Fala o enigma após o mago aparecer
+            setTimeout(() => {
+              falarEnigma();
+            }, 1000);
+          }
+        });
+
+        scene.addChild(plane);
+        await scene.start();
+
+      } catch (error) {
+        console.error('Erro ao iniciar AR:', error);
+        alert('Erro ao iniciar a realidade aumentada. Verifique a câmera e tente novamente.');
+      }
+    }
+
+    // Função que faz o mago "falar" o enigma
+    function falarEnigma() {
+      const enigma = "Grande aprendiz... Para desbloquear o gelato eterno, responda: O que é frio como o inverno, doce como o amor e derrete no coração?";
+
+      // Usa a Web Speech API para falar
+      const utterance = new SpeechSynthesisUtterance(enigma);
+      utterance.lang = 'pt-BR'; // Voz em português
+      utterance.rate = 0.9;
+      utterance.pitch = 1.2;
+
+      speechSynthesis.speak(utterance);
+
+      // Opcional: mostra o texto na tela
+      alert(enigma);
+    }
+  </script>
+
+  <!-- Scripts adicionais (opcional) -->
   <script src="js/speech.js"></script>
-  <script src="js/sensors.js"></script>
 </body>
 </html>
