@@ -19,7 +19,7 @@ let etapaAtual = 1;
 function iniciarJogo() {
   document.getElementById('inicio').style.display = 'none';
   document.getElementById('jogo').style.display = 'block';
-  alert("oi")
+  alert("oi");
   mostrarEnigma();
   iniciarMapa();
 }
