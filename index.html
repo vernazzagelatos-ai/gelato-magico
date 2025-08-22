@@ -78,29 +78,42 @@
     <button id="fechar" onclick="fecharCamera()">✖️ Sair</button>
   </div>
 
-  <script>
-    let stream;
+ <script>
+  let stream;
 
-    async function abrirCamera() {
-      document.getElementById("inicio").style.display = "none";
-      document.getElementById("camera-container").style.display = "block";
+  async function abrirCamera() {
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("camera-container").style.display = "block";
 
+    try {
+      // Força a câmera traseira
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: "environment" }
+      });
+
+      const video = document.getElementById("video");
+      video.srcObject = stream;
+    } catch (err) {
+      console.error("Erro ao acessar câmera:", err);
+
+      // Tenta fallback (câmera frontal ou qualquer uma)
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: true });
         const video = document.getElementById("video");
         video.srcObject = stream;
-      } catch (err) {
-        alert("Erro ao acessar a câmera: " + err.message);
+      } catch (fallbackErr) {
+        alert("Não foi possível acessar a câmera. Permita o acesso e tente novamente.");
       }
     }
+  }
 
-    function fecharCamera() {
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
-      document.getElementById("camera-container").style.display = "none";
-      document.getElementById("inicio").style.display = "flex";
+  function fecharCamera() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
     }
-  </script>
+    document.getElementById("camera-container").style.display = "none";
+    document.getElementById("inicio").style.display = "flex";
+  }
+</script>
 </body>
 </html>
