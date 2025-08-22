@@ -6,11 +6,11 @@
   <title>Gelato Mágico: A Jornada de Vernazza</title>
   <meta name="description" content="Encontre o Mago dos Gelatos em Realidade Aumentada!" />
 
-  <!-- A-Frame + AR.js (WebAR grátis) -->
+  <!-- A-Frame + AR.js -->
   <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 
-   <!-- Estilo -->
+  <!-- Estilo -->
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
@@ -30,14 +30,18 @@
       arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
       vr-mode-ui="enabled: false"
     >
-      <!-- Ativa a câmera e rastreia o plano (chão ou mesa) -->
+      <!-- Luzes -->
+      <a-light type="ambient" intensity="0.7"></a-light>
+      <a-light type="directional" intensity="0.7" position="0 1 1"></a-light>
+
+      <!-- Plano de rastreamento (chão) -->
       <a-entity
         position="0 0 0"
         rotation="-90 0 0"
         plane="size: 1"
       ></a-entity>
 
-      <!-- Modelo 3D do Mago (.glb) -->
+      <!-- Modelo 3D do Mago -->
       <a-entity
         id="mago-3d"
         gltf-model="assets/3d/mago-dos-gelatos.glb"
@@ -46,10 +50,6 @@
         rotation="0 180 0"
         animation-mixer
       ></a-entity>
-
-      <!-- Luz ambiente para o modelo não ficar preto -->
-      <a-light type="ambient" intensity="0.7"></a-light>
-      <a-light type="directional" intensity="0.7" position="0 1 1"></a-light>
     </a-scene>
 
     <!-- Botão para sair do AR -->
@@ -61,36 +61,7 @@
     </div>
   </div>
 
-  <script>
-    // Inicia o modo AR
-    function iniciarAR() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('ar-container').style.display = 'block';
-
-      // Mostra o enigma após 3 segundos (quando o mago aparecer)
-      setTimeout(() => {
-        document.getElementById('enigma-box').style.display = 'block';
-        falarEnigma();
-      }, 3000);
-    }
-
-    // Fecha o AR e volta para a tela inicial
-    function fecharAR() {
-      document.getElementById('ar-container').style.display = 'none';
-      document.getElementById('inicio').style.display = 'flex';
-      document.getElementById('enigma-box').style.display = 'none';
-    }
-
-    // Faz o enigma ser falado (voz sintetizada)
-    function falarEnigma() {
-      const texto = "O que é frio como o inverno, doce como o amor e derrete no coração?";
-      const utterance = new SpeechSynthesisUtterance(texto);
-      utterance.lang = 'pt-BR';
-      utterance.rate = 0.9;
-      utterance.pitch = 1.2;
-      speechSynthesis.speak(utterance);
-    }
-  </script>
-
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
 </body>
 </html>
