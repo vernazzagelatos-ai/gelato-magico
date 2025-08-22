@@ -12,16 +12,29 @@ const enigmas = [
   "Sou uma fonte onde moedas voam. Quem joga uma, sonha com estrelas. Mas o verdadeiro segredo está na inscrição esquecida: 'Trevi' vem de 'trivium'. O que isso significa?"
 ];
 
+
+
+let arAtivado = false;
+
 function iniciarJogo() {
   document.getElementById('inicio').style.display = 'none';
+  document.getElementById('ar-view').style.display = 'block';
+  falar("Bem-vindo, Aprendiz! Sou Vernazza, o Mago dos Gelatos. A magia do gelato está desaparecendo… e só você pode restaurá-la.");
+}
+
+function entrarNoJogo() {
+  document.getElementById('ar-view').style.display = 'none';
   document.getElementById('jogo').style.display = 'block';
   mostrarEnigma();
   iniciarMapa();
 }
 
 function mostrarEnigma() {
-  const box = document.getElementById('texto-enigma');
-  box.textContent = enigmas[etapaAtual - 1];
+  const enigmas = [
+    "Sou de pedra, redonda e antiga. Já vi gladiadores, leões e imperadores. Guardo um leite que nunca esfria. Onde estou?",
+    // ... outros enigmas
+  ];
+  document.getElementById('texto-enigma').textContent = enigmas[etapaAtual - 1];
   falar(enigmas[etapaAtual - 1]);
 }
 
@@ -32,8 +45,10 @@ function chamarMago() {
 function ativarAR() {
   document.getElementById('jogo').style.display = 'none';
   document.getElementById('ar-view').style.display = 'block';
-  // Aqui você carrega o modelo 3D com base na etapa
-  const modelo = `assets/models/ingrediente${etapaAtual}.glb`;
-  const objeto = document.getElementById('objeto-ar');
-  objeto.setAttribute('gltf-model', modelo);
 }
+
+
+
+
+
+
