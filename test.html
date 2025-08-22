@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <title>AR com Objeto 3D Local</title>
+
+    <!-- A-Frame -->
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+
+    <!-- AR.js -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+
+    <style>
+      body, html {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100%;
+        background: #000;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Cena de AR -->
+    <a-scene
+      embedded
+      arjs="trackingMethod: best; sourceType: camera; debugUIEnabled: false; facingMode: environment"
+      vr-mode-ui="enabled: false"
+    >
+      <!-- Luz -->
+      <a-light type="ambient" intensity="1"></a-light>
+      <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
+
+      <!-- Marcador padrão (hiro) -->
+      <a-marker preset="hiro">
+        <!-- Modelo 3D local -->
+        <a-entity
+          gltf-model="assets/3d/mago.glb"
+          scale="0.3 0.3 0.3"
+          rotation="0 180 0"
+          position="0 0 0"
+          animation-mixer
+        ></a-entity>
+      </a-marker>
+
+      <!-- Câmera -->
+      <a-entity camera></a-entity>
+    </a-scene>
+  </body>
+</html>
