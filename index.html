@@ -5,46 +5,56 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Gelato Mágico: A Jornada de Vernazza</title>
   <link rel="stylesheet" href="css/style.css" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="assets/images/icon-192.png" />
+
   <!-- A-Frame e AR.js -->
   <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body>
-  <!-- Tela Inicial -->
+
+  <!-- TELA INICIAL (centralizada) -->
   <div id="inicio" class="tela">
-    <div class="logo">
-      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" />
+    <div class="logo-container">
+      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" class="logo" />
+      <h1>Gelato Mágico</h1>
+      <p>Sua jornada mística começa agora.</p>
+      <button onclick="iniciarJogo()">✨ Aceitar Missão</button>
     </div>
-    <h1>Gelato Mágico</h1>
-    <p>Sua jornada mística começa aqui.</p>
-    <button onclick="iniciarJogo()">Aceitar a Missão</button>
   </div>
 
-  <!-- Tela do Jogo (interface normal) -->
-<div id="jogo" class="tela" style="display: none;">
-  <div id="mapa-container"></div>
-  <div id="enigma-box" class="enigma">
-    <p id="texto-enigma">Enigma aparecerá aqui...</p>
+  <!-- TELA DE AR (ativada ao clicar) -->
+  <div id="ar-view" style="display: none;">
+    <a-scene embedded arjs="trackingMethod: best; debugUIEnabled: false;" vr-mode-ui="enabled: false">
+      <a-marker type="pattern" url="data/pattern-marker.patt">
+        <!-- Mago dos Gelatos aparece em AR -->
+        <a-entity
+          id="mago-ar"
+          gltf-model="assets/models/mago.gltf"
+          scale="0.8 0.8 0.8"
+          position="0 0.5 0"
+          animation="property: rotation; to: 0 360 0; loop: true; dur: 10000">
+        </a-entity>
+        <!-- Pergaminho mágico flutuante -->
+        <a-text value="Bem-vindo, Aprendiz!" color="#ffcc00" align="center" position="0 1.2 0" width="4"></a-text>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- Botão para sair do AR e ir para o jogo principal -->
+    <button onclick="entrarNoJogo()" class="btn-sair-ar">➡️ Entrar no Jogo</button>
   </div>
-  <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
-  <button id="ativar-ar" onclick="ativarAR()" style="display: none;">👁️ Ativar Visão Mística</button>
-</div>
 
-<!-- TELA DE AR: SÓ APARECE QUANDO ATIVADA -->
-<div id="ar-view" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
-  <a-scene embedded arjs="trackingMethod: best; debugUIEnabled: false;" style="width: 100%; height: 100%;">
-    <a-marker type="pattern" url="data/pattern-marker.patt">
-      <!-- Modelo 3D do ingrediente -->
-      <a-entity id="objeto-ar" position="0 0.5 0" scale="0.5 0.5 0.5"></a-entity>
-    </a-marker>
-    <a-entity camera></a-entity>
-  </a-scene>
-
-  <!-- Botão para sair do AR -->
-  <button onclick="sairAR()" style="position: absolute; top: 10px; right: 10px; z-index: 1001; background: red; color: white; border: none; padding: 10px; border-radius: 5px;">
-    ✕ Sair do AR
-  </button>
-</div>
+  <!-- TELA DO JOGO (depois do AR) -->
+  <div id="jogo" class="tela" style="display: none;">
+    <div id="mapa-container"></div>
+    <div id="enigma-box" class="enigma">
+      <p id="texto-enigma">O Mago irá revelar o primeiro enigma...</p>
+    </div>
+    <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
+    <button id="ativar-ar" onclick="ativarAR()">👁️ Ativar Visão Mística</button>
+  </div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
