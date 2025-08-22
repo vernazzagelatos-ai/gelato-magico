@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Gelato Mágico: Mago em AR</title>
+  <title>Gelato Mágico: AR</title>
   <style>
     body, html {
       margin: 0;
@@ -59,10 +59,9 @@
     }
   </style>
 
-  <!-- A-Frame (render 3D) -->
+  <!-- A-Frame -->
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- AR.js (realidade aumentada) -->
+  <!-- AR.js -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body>
@@ -78,43 +77,27 @@
   <div id="ar-container">
     <a-scene
       embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; facingMode: environment"
+      arjs="trackingMethod: best; sourceType: camera; debugUIEnabled: false; facingMode: environment"
       vr-mode-ui="enabled: false"
     >
       <!-- Luz ambiente -->
       <a-light type="ambient" intensity="1"></a-light>
       <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
 
-      <!-- Plano de rastreamento (chão ou mesa) -->
+      <!-- MODELO 3D -->
       <a-entity
-        position="0 0 0"
-        rotation="-90 0 0"
-        plane="size: 1"
+        id="mago-3d"
+        gltf-model="assets/3d/mago-dos-gelatos.glb"
+        scale="0.2 0.2 0.2"
+        position="0 -0.5 -1.5"
+        rotation="0 180 0"
+        animation-mixer
       ></a-entity>
 
-      <!-- MODELO 3D DO MAGO (.glb) -->
-
-      <!-- MODELO 3D DO MAGO - Pequeno, no chão, à frente -->
-<a-entity
-  id="mago-3d"
-  gltf-model="assets/3d/mago-dos-gelatos.glb"
-  scale="0.15 0.15 0.15"
-  position="0 -0.3 -1.0"
-  rotation="0 180 0"
-  animation-mixer
-></a-entity>
-   
-
-      <!-- Mensagem se modelo falhar (opcional) -->
-      <a-entity
-        id="erro-modelo"
-        visible="false"
-        position="0 1.2 0"
-        text="value: Mago indisponível; color: yellow; align: center; width: 5"
-      ></a-entity>
+      <!-- Câmera -->
+      <a-entity camera></a-entity>
     </a-scene>
 
-    <!-- Botão para sair do AR -->
     <button id="fechar-ar" onclick="fecharAR()">✖️ Sair</button>
   </div>
 
@@ -123,41 +106,30 @@
       document.getElementById('inicio').style.display = 'none';
       document.getElementById('ar-container').style.display = 'block';
 
-      // Força o A-Frame iniciar a cena
       setTimeout(() => {
         const scene = document.querySelector('a-scene');
         if (scene && !scene.isPlaying) {
           scene.play();
         }
         window.dispatchEvent(new Event('resize'));
-      }, 500);
+      }, 300);
     }
 
     function fecharAR() {
       const scene = document.querySelector('a-scene');
-      if (scene) {
-        scene.pause(); // Pausa o AR
-        scene.setAttribute('renderer', 'clearColor', '#000000');
-      }
+      if (scene) scene.pause();
       document.getElementById('ar-container').style.display = 'none';
       document.getElementById('inicio').style.display = 'flex';
     }
-
-    // Libera acesso à câmera e áudio no mobile
-    document.addEventListener('click', function unlockMedia() {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      ctx.resume().then(() => console.log('Áudio desbloqueado'));
-      document.removeEventListener('click', unlockMedia);
-    }, { once: true });
 
     // Tratamento de erro do modelo
     document.addEventListener('DOMContentLoaded', () => {
       const model = document.getElementById('mago-3d');
       model.addEventListener('model-error', () => {
         console.warn('⚠️ Modelo .glb não carregado');
-        document.getElementById('erro-modelo').setAttribute('visible', true);
       });
     });
   </script>
 </body>
 </html>
+
