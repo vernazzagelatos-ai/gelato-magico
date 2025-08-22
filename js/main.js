@@ -17,9 +17,11 @@ let etapaAtual = 1;
 
 // ✅ 1. Iniciar Jogo: Mostra o jogo principal
 function iniciarJogo() {
+  
+  alert("oi");
   document.getElementById('inicio').style.display = 'none';
   document.getElementById('jogo').style.display = 'block';
-  alert("oi");
+  
   mostrarEnigma();
   iniciarMapa();
 }
