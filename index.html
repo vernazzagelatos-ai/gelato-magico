@@ -26,6 +26,7 @@
   </div>
 
 
+<!-- Dentro do <a-scene> -->
 
 
   
@@ -37,6 +38,22 @@
   vr-mode-ui="enabled: false"
   renderer="logarithmicDepthBuffer: true;"
   webgl="antialias: true"
+  <a-entity
+  id="mago-model"
+  gltf-model="assets/3d/mago-dos-gelatos.glb"
+  scale="0.3 0.3 0.3"
+  position="0 0.5 0"
+  rotation="0 180 0"
+  animation-mixer
+></a-entity>
+
+<!-- Elemento de aviso (opcional) -->
+<a-entity
+  id="erro-modelo"
+  visible="false"
+  position="0 1.2 0"
+  text="value: Modelo 3D não disponível; color: #ff0000; align: center; width: 5"
+></a-entity>
 >
       <!-- Luz ambiente e direcional -->
       <a-light type="ambient" intensity="1"></a-light>
