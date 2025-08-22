@@ -93,14 +93,17 @@
       ></a-entity>
 
       <!-- MODELO 3D DO MAGO (.glb) -->
-      <a-entity
-        id="mago-3d"
-        gltf-model="assets/models/mago.glb"
-        scale="0.3 0.3 0.3"
-        position="0 0.5 0"
-        rotation="0 180 0"
-        animation-mixer
-      ></a-entity>
+
+      <!-- MODELO 3D DO MAGO - Pequeno, no chão, à frente -->
+<a-entity
+  id="mago-3d"
+  gltf-model="assets/3d/mago-dos-gelatos.glb"
+  scale="0.15 0.15 0.15"
+  position="0 -0.3 -1.0"
+  rotation="0 180 0"
+  animation-mixer
+></a-entity>
+   
 
       <!-- Mensagem se modelo falhar (opcional) -->
       <a-entity
