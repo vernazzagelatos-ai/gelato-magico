@@ -19,57 +19,84 @@ const enigmas = [
  * Lógica do jogo: AR, enigmas, navegação
  */
 
-// Inicia o modo AR
-function iniciarAR() {
-  // Esconde a tela inicial com fade
-  const inicio = document.getElementById('inicio');
-  inicio.style.opacity = '0';
-  setTimeout(() => {
-    inicio.style.display = 'none';
-  }, 500);
+/**
+ * main.js
+ * Corrigido para ativar câmera após toque
+ */
 
+let arSceneInitialized = false;
+
+function iniciarAR() {
   // Mostra a tela AR
+  document.getElementById('inicio').style.display = 'none';
   document.getElementById('ar-container').style.display = 'block';
 
-  // Garante que a cena AR será iniciada
+  // Inicializa a cena AR apenas após o toque (necessário para iOS/Android)
+  if (!arSceneInitialized) {
+    setTimeout(() => {
+      initARScene();
+    }, 500);
+    arSceneInitialized = true;
+  }
+}
+
+function initARScene() {
+  // Força o A-Frame reiniciar o canvas e ativar a câmera
+  const scene = document.querySelector('a-scene');
+
+  // Verifica se o AR já foi iniciado
+  if (scene && !scene.hasLoaded) {
+    scene.addEventListener('loaded', () => {
+      console.log('A-Frame scene carregada');
+      showEnigma();
+    });
+  } else {
+    console.log('A-Frame já carregado');
+    showEnigma();
+  }
+
+  // Força o redimensionamento da cena
+  setTimeout(() => {
+    window.dispatchEvent(new Event('resize'));
+  }, 1000);
+}
+
+function showEnigma() {
   setTimeout(() => {
     const enigmaBox = document.getElementById('enigma-box');
     enigmaBox.style.display = 'block';
-  }, 2000); // Mostra após o carregamento da cena
+  }, 1000);
 }
 
-// Fecha o AR e volta para a tela inicial
 function fecharAR() {
   document.getElementById('ar-container').style.display = 'none';
-  const inicio = document.getElementById('inicio');
-  inicio.style.display = 'flex';
-  inicio.style.opacity = '1';
+  document.getElementById('inicio').style.display = 'flex';
   window.speechSynthesis.cancel();
 }
 
-// Fala o enigma ao tocar na caixa
 function falarEnigma() {
   const texto = "Grande aprendiz... O que é frio como o inverno, doce como o amor e derrete no coração?";
   const utterance = new SpeechSynthesisUtterance(texto);
   utterance.lang = 'pt-BR';
   utterance.rate = 0.9;
   utterance.pitch = 1.2;
-  utterance.volume = 1;
   speechSynthesis.speak(utterance);
 
-  // Feedback visual
   const box = document.getElementById('enigma-box');
-  box.textContent = "🎧 Enigma sendo falado...";
+  box.textContent = "🎧 Falando...";
   setTimeout(() => {
-    if (!window.speechSynthesis.speaking) {
+    if (!speechSynthesis.speaking) {
       box.textContent = "Toque para ouvir o enigma...";
     }
   }, 3000);
 }
 
-// Opcional: tocar som mágico ao iniciar (se o usuário já interagiu)
-document.addEventListener('click', function enableAudio() {
-  // Isso libera o áudio no iOS/Android
-  window.speechSynthesis.cancel();
-  document.removeEventListener('click', enableAudio);
+// Libera áudio e vídeo no mobile (iOS/Android)
+document.addEventListener('click', function unlockMedia() {
+  // Isso ativa o contexto de áudio/vídeo no mobile
+  const context = new (window.AudioContext || window.webkitAudioContext)();
+  context.resume().then(() => console.log('Áudio desbloqueado'));
+
+  // Remove o listener após execução
+  document.removeEventListener('click', unlockMedia);
 }, { once: true });
