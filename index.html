@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Gelato Mágico</title>
+  <title>Missão Câmera</title>
   <style>
-
-
     body, html {
-       background: transparent;
       margin: 0;
       padding: 0;
       width: 100%;
       height: 100%;
-      overflow: hidden;
-      background: #000;
-      color: white;
       font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+      text-align: center;
     }
 
     #inicio {
@@ -25,27 +22,6 @@
       justify-content: center;
       align-items: center;
       height: 100vh;
-      text-align: center;
-    }
-
-    .logo-container {
-      width: 168px;
-      height: 168px;
-      border-radius: 50%;
-      background: linear-gradient(45deg, #ff6b9d, #1a4d80);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      margin-bottom: 30px;
-      box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
-    }
-
-    .logo-container img {
-      width: 90%;
-      height: 90%;
-      border-radius: 50%;
-      border: 5px solid white;
     }
 
     button {
@@ -56,107 +32,75 @@
       font-size: 1.2em;
       border-radius: 50px;
       cursor: pointer;
+      margin-top: 20px;
     }
 
-    #ar-container {
+    #camera-container {
       display: none;
       width: 100%;
       height: 100%;
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 999;
+      background: black;
     }
 
-    #fechar-ar {
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #fechar {
       position: absolute;
       top: 10px;
       right: 10px;
-      background: rgba(255, 0, 0, 0.9);
-      color: white;
+      background: red;
       border: none;
       padding: 10px 15px;
-      border-radius: 5px;
-      z-index: 1100;
+      color: white;
+      border-radius: 8px;
       font-size: 1em;
     }
   </style>
-
-  <!-- A-Frame (última versão) -->
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-
-  <!-- AR.js para rastreamento de plano -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
 </head>
 <body>
-
-  <!-- TELA INICIAL -->
+  <!-- Tela inicial -->
   <div id="inicio">
-    <div class="logo-container">
-      <img src="assets/images/logo-vernazza.png" alt="Vernazza" />
-    </div>
-    <h1>Gelato Mágico</h1>
-    <p>Sua jornada mística começa agora.</p>
-    <button onclick="iniciarAR()">✨ Aceitar Missão</button>
+    <h1>Missão Gelato</h1>
+    <p>Sua jornada começa aqui.</p>
+    <button onclick="abrirCamera()">✨ Aceitar Missão</button>
   </div>
 
-  <!-- TELA AR -->
-  <div id="ar-container">
-<a-scene
-  vr-mode-ui="enabled: false"
-  embedded
-  arjs="trackingMethod: best; sourceType: camera; debugUIEnabled: false;"
->
-  <!-- Luz para não ficar escuro -->
-  <a-light type="ambient" intensity="1"></a-light>
-  <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
-
-  <!-- Modelo -->
-  <a-entity
-    id="mago-model"
-    gltf-model="assets/3d/mago-dos-gelatos.glb"
-    scale="0.3 0.3 0.3"
-    position="0 0.5 0"
-    rotation="0 180 0"
-    animation-mixer
-  ></a-entity>
-
-  <a-entity camera></a-entity>
-</a-scene>
-    <button id="fechar-ar" onclick="fecharAR()">✖️ Sair</button>
+  <!-- Tela da câmera -->
+  <div id="camera-container">
+    <video id="video" autoplay playsinline></video>
+    <button id="fechar" onclick="fecharCamera()">✖️ Sair</button>
   </div>
 
   <script>
-    function iniciarAR() {
-      document.getElementById('inicio').style.display = 'none';
-      document.getElementById('ar-container').style.display = 'block';
+    let stream;
 
-      // Força o A-Frame reiniciar
-      setTimeout(() => {
-        window.dispatchEvent(new Event('resize'));
-        document.querySelector('a-scene').play(); // Força iniciar
-      }, 500);
+    async function abrirCamera() {
+      document.getElementById("inicio").style.display = "none";
+      document.getElementById("camera-container").style.display = "block";
 
-      // Mostra erro se modelo não carregar
-      const model = document.getElementById('mago-model');
-      model.addEventListener('model-error', () => {
-        document.getElementById('erro-modelo').setAttribute('visible', true);
-      });
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+        const video = document.getElementById("video");
+        video.srcObject = stream;
+      } catch (err) {
+        alert("Erro ao acessar a câmera: " + err.message);
+      }
     }
 
-    function fecharAR() {
-      const scene = document.querySelector('a-scene');
-      if (scene) scene.pause(); // Pausa o AR
-      document.getElementById('ar-container').style.display = 'none';
-      document.getElementById('inicio').style.display = 'flex';
+    function fecharCamera() {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+      document.getElementById("camera-container").style.display = "none";
+      document.getElementById("inicio").style.display = "flex";
     }
-
-    // Libera áudio/vídeo no mobile
-    document.addEventListener('click', () => {
-      // Ativa contexto de mídia
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
-      ctx.resume().then(() => console.log('Áudio desbloqueado'));
-    }, { once: true });
   </script>
 </body>
 </html>
