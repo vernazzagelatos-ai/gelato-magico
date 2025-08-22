@@ -20,25 +20,31 @@
     <button onclick="iniciarJogo()">Aceitar a Missão</button>
   </div>
 
-  <!-- Tela do Jogo -->
-  <div id="jogo" class="tela" style="display: none;">
-    <div id="mapa-container"></div>
-    <div id="enigma-box" class="enigma">
-      <p id="texto-enigma">Enigma aparecerá aqui...</p>
-    </div>
-    <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
-    <button id="ativar-ar" onclick="ativarAR()">👁️ Ativar Visão Mística</button>
+  <!-- Tela do Jogo (interface normal) -->
+<div id="jogo" class="tela" style="display: none;">
+  <div id="mapa-container"></div>
+  <div id="enigma-box" class="enigma">
+    <p id="texto-enigma">Enigma aparecerá aqui...</p>
   </div>
+  <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
+  <button id="ativar-ar" onclick="ativarAR()" style="display: none;">👁️ Ativar Visão Mística</button>
+</div>
 
-  <!-- Realidade Aumentada -->
-  <div id="ar-view" style="display: none;">
-    <a-scene embedded arjs="trackingMethod: best; debugUIEnabled: false;">
-      <a-marker type="pattern" url="data/pattern-marker.patt">
-        <a-entity id="objeto-ar" position="0 0.5 0" scale="0.5 0.5 0.5"></a-entity>
-      </a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
-  </div>
+<!-- TELA DE AR: SÓ APARECE QUANDO ATIVADA -->
+<div id="ar-view" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1000;">
+  <a-scene embedded arjs="trackingMethod: best; debugUIEnabled: false;" style="width: 100%; height: 100%;">
+    <a-marker type="pattern" url="data/pattern-marker.patt">
+      <!-- Modelo 3D do ingrediente -->
+      <a-entity id="objeto-ar" position="0 0.5 0" scale="0.5 0.5 0.5"></a-entity>
+    </a-marker>
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <!-- Botão para sair do AR -->
+  <button onclick="sairAR()" style="position: absolute; top: 10px; right: 10px; z-index: 1001; background: red; color: white; border: none; padding: 10px; border-radius: 5px;">
+    ✕ Sair do AR
+  </button>
+</div>
 
   <!-- Scripts -->
   <script src="js/main.js"></script>
