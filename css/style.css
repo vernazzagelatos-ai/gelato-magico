@@ -1,129 +1,111 @@
-* {
+/* Reset básico */
+body, html {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
-}
-
-/* Container para o logo */
-.logo-container {
-  text-align: center;
-  margin-bottom: 20px;
-  width: 100%;
-}
-
-/* Estiliza o logo */
-.logo-container img {
-  width: 200px;          /* Tamanho pequeno */
-  height: auto;          /* Mantém proporção */
-  border-radius: 70%;    /* Formato arredondado (opcional) */
-  border: 1px solid #d4144d; /* Borda estilosa (opcional) */
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
- // background: #fff;      /* Fundo branco caso tenha transparência */
-  padding: 5px;          /* Espaço interno */
-}
-body {
-  font-family: 'Arial', sans-serif;
-  background: #000 url('assets/images/pergaminho-bg.png') no-repeat center center;
-  background-size: cover;
-  color: #fff;
-  overflow: hidden;
-  height: 100vh;
-}
-
-.tela {
-  position: fixed;
   width: 100%;
   height: 100%;
+  overflow: hidden;
+  font-family: 'Arial', sans-serif;
+  background: #000;
+}
+
+/* TELA INICIAL */
+#inicio {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: linear-gradient(to bottom, #1a4d80, #0d1b3d);
+  color: white;
+  text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: 20px;
+  z-index: 1000;
 }
 
-#inicio {
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 400px;
-}
-
-.logo img {
-  width: 120px;
+#inicio .logo {
+  width: 180px;
   margin-bottom: 20px;
 }
 
-button {
-  background: #d4144d;
+#inicio h1 {
+  font-size: 2.2em;
+  margin: 10px 0;
+}
+
+#inicio p {
+  font-size: 1.2em;
+  opacity: 0.9;
+}
+
+#inicio button {
+  background: #ff6b9d;
   color: white;
   border: none;
-  padding: 12px 24px;
-  margin: 10px;
-  font-size: 16px;
-  border-radius: 30px;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  border-radius: 50px;
   cursor: pointer;
-  transition: 0.3s;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  transition: background 0.3s;
 }
 
-button:hover {
-  background: #ff2566;
-  transform: scale(1.05);
+#inicio button:hover {
+  background: #e55080;
 }
 
-#mapa-container, #mapa-admin {
+/* TELA DE AR */
+#ar-container {
+  display: none;
   width: 100%;
-  height: 70vh;
-  border-radius: 15px;
-  background: #111;
-  border: 2px solid #d4144d;
+  height: 100%;
 }
 
-.enigma {
-  background: rgba(212, 20, 77, 0.3);
-  padding: 15px;
-  border-radius: 15px;
-  margin: 10px;
-  max-width: 90%;
-  font-size: 18px;
-  backdrop-filter: blur(5px);
+#fechar-ar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 0, 0, 0.8);
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  z-index: 1100;
+  font-size: 1em;
+  cursor: pointer;
 }
 
-#chamar-mago, #ativar-ar {
-  position: fixed;
+#enigma-box {
+  position: absolute;
   bottom: 20px;
-  background: #14a8d4;
-}
-
-#ativar-ar {
-  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
+  max-width: 90%;
+  font-size: 1.1em;
+  text-align: center;
+  z-index: 1001;
+  display: none;
+  animation: subir 0.8s ease-out;
 }
 
-.admin {
-  padding: 20px;
-  background: #000;
-  color: #fff;
-  min-height: 100vh;
+@keyframes subir {
+  from { opacity: 0; bottom: -50px; }
+  to { opacity: 1; bottom: 20px; }
 }
 
-#status {
-  margin-top: 20px;
-  color: #0f0;
-}
-/* Garante que o AR ocupe 100% da tela */
-#ar-view {
-  background: #000;
-}
-
-#ar-view a-scene {
+/* A-Frame Scene */
+a-scene {
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100% !important;
-  height: 100% !important;
-  overflow: hidden;
 }
 
 /* Botão de saída do AR */
