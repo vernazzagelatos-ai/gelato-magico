@@ -95,3 +95,22 @@ button:hover {
   margin-top: 20px;
   color: #0f0;
 }
+/* Garante que o AR ocupe 100% da tela */
+#ar-view {
+  background: #000;
+}
+
+#ar-view a-scene {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+}
+
+/* Botão de saída do AR */
+#ar-view button {
+  font-size: 16px;
+  z-index: 1001;
+}
