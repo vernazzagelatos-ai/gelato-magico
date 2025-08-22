@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin - Gelato Mágico</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+  <div class="admin">
+    <h2>🔐 Painel do Mago</h2>
+    <label>
+      Raio do Jogo: 
+      <input type="range" min="100" max="1000" value="500" id="raio-slider" /> 
+      <span id="raio-valor">500m</span>
+    </label>
+    <p>Clique no mapa para definir os 10 pontos turísticos</p>
+    <div id="mapa-admin" class="map"></div>
+    <button onclick="salvarConfig()">Salvar Configuração</button>
+    <button onclick="limparConfig()">Limpar Tudo</button>
+    <div id="status"></div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

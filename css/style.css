@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background: #000 url('assets/images/pergaminho-bg.png') no-repeat center center;
+  background-size: cover;
+  color: #fff;
+  overflow: hidden;
+  height: 100vh;
+}
+
+.tela {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+#inicio {
+  background: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 400px;
+}
+
+.logo img {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+button {
+  background: #d4144d;
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  margin: 10px;
+  font-size: 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #ff2566;
+  transform: scale(1.05);
+}
+
+#mapa-container, #mapa-admin {
+  width: 100%;
+  height: 70vh;
+  border-radius: 15px;
+  background: #111;
+  border: 2px solid #d4144d;
+}
+
+.enigma {
+  background: rgba(212, 20, 77, 0.3);
+  padding: 15px;
+  border-radius: 15px;
+  margin: 10px;
+  max-width: 90%;
+  font-size: 18px;
+  backdrop-filter: blur(5px);
+}
+
+#chamar-mago, #ativar-ar {
+  position: fixed;
+  bottom: 20px;
+  background: #14a8d4;
+}
+
+#ativar-ar {
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.admin {
+  padding: 20px;
+  background: #000;
+  color: #fff;
+  min-height: 100vh;
+}
+
+#status {
+  margin-top: 20px;
+  color: #0f0;
+}

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Gelato Mágico: A Jornada de Vernazza</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- A-Frame e AR.js -->
+  <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+</head>
+<body>
+  <!-- Tela Inicial -->
+  <div id="inicio" class="tela">
+    <div class="logo">
+      <img src="assets/images/logo-vernazza.png" alt="Vernazza Gelato" />
+    </div>
+    <h1>Gelato Mágico</h1>
+    <p>Sua jornada mística começa aqui.</p>
+    <button onclick="iniciarJogo()">Aceitar a Missão</button>
+  </div>
+
+  <!-- Tela do Jogo -->
+  <div id="jogo" class="tela" style="display: none;">
+    <div id="mapa-container"></div>
+    <div id="enigma-box" class="enigma">
+      <p id="texto-enigma">Enigma aparecerá aqui...</p>
+    </div>
+    <button id="chamar-mago" onclick="chamarMago()">🧙‍♂️ Chamar o Mago</button>
+    <button id="ativar-ar" onclick="ativarAR()">👁️ Ativar Visão Mística</button>
+  </div>
+
+  <!-- Realidade Aumentada -->
+  <div id="ar-view" style="display: none;">
+    <a-scene embedded arjs="trackingMethod: best; debugUIEnabled: false;">
+      <a-marker type="pattern" url="data/pattern-marker.patt">
+        <a-entity id="objeto-ar" position="0 0.5 0" scale="0.5 0.5 0.5"></a-entity>
+      </a-marker>
+      <a-entity camera></a-entity>
+    </a-scene>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/geolocation.js"></script>
+  <script src="js/speech.js"></script>
+  <script src="js/ar.js"></script>
+  <script src="js/sensors.js"></script>
+</body>
+</html>
