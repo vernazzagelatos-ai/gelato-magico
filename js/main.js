@@ -12,7 +12,7 @@ const enigmas = [
   "Sou uma fonte onde moedas voam. Quem joga uma, sonha com estrelas. Mas o verdadeiro segredo está na inscrição esquecida: 'Trevi' vem de 'trivium'. O que isso significa?"
 ];
 
-let etapaAtual = 1;
+
 
 // js/main.js
 
