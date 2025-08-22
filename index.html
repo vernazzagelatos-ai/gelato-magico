@@ -99,41 +99,27 @@
 
   <!-- TELA AR -->
   <div id="ar-container">
-    <a-scene
-      embedded
-      arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false; canvasWidth: 480; canvasHeight: 640"
-      vr-mode-ui="enabled: false"
-    >
-      <!-- Luz para o modelo não ficar preto -->
-      <a-light type="ambient" intensity="1"></a-light>
-      <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
+<a-scene
+  vr-mode-ui="enabled: false"
+  embedded
+  arjs="trackingMethod: best; sourceType: camera; debugUIEnabled: false;"
+>
+  <!-- Luz para não ficar escuro -->
+  <a-light type="ambient" intensity="1"></a-light>
+  <a-light type="directional" intensity="0.8" position="0 1 1"></a-light>
 
-      <!-- Plano de rastreamento -->
-      <a-entity
-        position="0 0 0"
-        rotation="-90 0 0"
-        plane="size: 1"
-      ></a-entity>
+  <!-- Modelo -->
+  <a-entity
+    id="mago-model"
+    gltf-model="assets/3d/mago-dos-gelatos.glb"
+    scale="0.3 0.3 0.3"
+    position="0 0.5 0"
+    rotation="0 180 0"
+    animation-mixer
+  ></a-entity>
 
-      <!-- Modelo 3D (opcional - pode falhar sem quebrar) -->
-      <a-entity
-        id="mago-model"
-        gltf-model="assets/3d/mago-dos-gelatos.glb"
-        scale="0.3 0.3 0.3"
-        position="0 0.5 0"
-        rotation="0 180 0"
-        animation-mixer
-      ></a-entity>
-
-      <!-- Mensagem se modelo falhar -->
-      <a-entity
-        id="erro-modelo"
-        visible="false"
-        position="0 1.2 0"
-        text="value: Mago indisponível; color: yellow; align: center; width: 5"
-      ></a-entity>
-    </a-scene>
-
+  <a-entity camera></a-entity>
+</a-scene>
     <button id="fechar-ar" onclick="fecharAR()">✖️ Sair</button>
   </div>
 
